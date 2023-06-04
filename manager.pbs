@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -N Shelin_LAB2
+#PBS -l nodes=2:ppn=2
+#PBS -l walltime=00:01:00
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+counter=0
+stat_file="statistics.txt"
+
+while [ $counter -lt 100 ]
+do
+    mpiexec -n 4 -f $PBS_NODEFILE ./mpi_hello_world
+
+    # Update statistics
+    echo "MPI Processes: 4" >> $stat_file
+
+    counter=$((counter+1))
+done
