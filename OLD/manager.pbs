@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -N Shelin_LAB2_HPC
+#PBS -l nodes=2:ppn=2
+#PBS -l walltime=00:01:00
+#PBS -q batch
+
+# Виходити зі скрипту при першій помилці
+set -e
+
+# Перейти в робочу директорію
+cd $PBS_O_WORKDIR
+
+# Вивести інформацію про виконавче середовище
+echo "Running on host: $(hostname)"
+echo "Current working directory: $(pwd)"
+echo "Number of processors: $(nproc)"
+echo "PBS job ID: $PBS_JOBID"
+
+# Запустити MPI-програму
+mpirun -np 4 ./mpi_hello_world
+
+# Перезапустити задачу кожну хвилину
+sleep 60
+qsub $PBS_JOBID
+
+
+# /bin/bash
+# #PBS -N Shelin_LAB2
+# #PBS -l nodes=2:ppn=2
+# #PBS -l walltime=00:01:00
+# #PBS -j oe
+# cd $PBS_O_WORKDIR
+# counter=0
+# stat_file="statistics.txt"
+# while [ $counter -lt 25 ]
+# do
+# mpiexec -n 4 -f $PBS_NODEFILE ./mpi_hello_world
+# # Update statistics
+# echo "Node: $(hostname), MPI Processes: 4, Process Number: $((counter+1))" >> $stat_file
+# ping -c 2 localhost >/dev/null # A classic from the Land of Windows and Batches...
+# counter=$((counter+1))
+# done 
